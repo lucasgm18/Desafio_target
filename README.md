@@ -1,27 +1,25 @@
-# Target Sistemas — Solução Técnica ERP Comercial (.NET 10 / C# & Modern Frontend)
+# Target Sistemas — Solução Técnica Desafio ERP (.NET / C# & Frontend)
 
-Solução arquitetural completa desenvolvida para o Desafio Técnico da **Target Sistemas**, com foco em engenharia de sistemas ERP, boas práticas de Clean Code, Object Calisthenics e interface corporativa pronta para deploy estático.
-
----
-
-## 📑 Sumário Executivo
-
-- **Backend:** C# (.NET 10 / .NET 8 LTS), Arquitetura em Camadas (Domain-Driven Design simplificado).
-- **Frontend:** Dashboard ERP em HTML5, Tailwind CSS e Vanilla JavaScript modular, **100% autônomo** (permite que o recrutador interaja com todos os módulos e simulações sem necessidade de subir um backend local).
-- **Testes Automatizados:** 35 testes unitários e arquiteturais desenvolvidos com **xUnit**, cobrindo 100% das regras de negócio e testando conformidade com **Object Calisthenics**.
-- **Deploy Pronto:** Configurado para **Vercel**, **GitHub Pages** e **Netlify**.
+Solução desenvolvida para o Desafio Técnico da **Target Sistemas**, contemplando a lógica de negócio dos três módulos propostos, boas práticas de Clean Code, Object Calisthenics e uma interface interativa para visualização e testes dos dados.
 
 ---
 
-## 🏛️ Diretrizes Arquiteturais & Object Calisthenics
+## 📑 Sumário
 
-O projeto adota práticas avançadas de desenvolvimento de software corporativo:
+- **Backend:** C# (.NET 10 / .NET 8), organizado em camadas limpas (Domain, Application, ConsoleApp e UnitTests).
+- **Frontend:** Interface em HTML5, Tailwind CSS e JavaScript modular, **100% autônoma** (permite testar e simular as regras de negócio diretamente no navegador).
+- **Testes Automatizados:** 35 testes unitários e arquiteturais desenvolvidos com **xUnit**, cobrindo todas as regras de negócio e validando as restrições de código.
 
-### 1. Ausência Total da Palavra-Chave `else` (Zero-Else Policy)
-Conforme exigido nas diretrizes de Object Calisthenics, **nenhuma estrutura condicional `else` foi utilizada no código de produção**. 
-As tomadas de decisão foram estruturadas através de:
+---
+
+## 🏛️ Diretrizes de Código & Boas Práticas
+
+O projeto foi construído seguindo rigorosamente os princípios solicitados no desafio:
+
+### 1. Ausência da Palavra-Chave `else` (Object Calisthenics)
+Nenhuma estrutura condicional `else` foi utilizada no código de produção. As tomadas de decisão foram estruturadas através de:
 - **Guard Clauses & Early Returns:** Validação defensiva imediata nas primeiras linhas dos métodos.
-- **Pattern Matching & Switch Expressions:** Expressões declarativas do C# moderno para faixas de comissão e tipos de operação:
+- **Pattern Matching & Switch Expressions:** Expressões declarativas do C# para faixas de comissão e tipos de operação:
   ```csharp
   // Exemplo no Domínio Comercial (Venda.cs)
   public decimal TaxaComissao => Valor switch
@@ -31,14 +29,14 @@ As tomadas de decisão foram estruturadas através de:
       _ => 0.05m
   };
   ```
-- **Teste Arquitetural Automatizado:** O arquivo `ObjectCalisthenicsArchTests.cs` inspeciona via reflexão e análise estática todos os arquivos `.cs` da pasta `src/`, garantindo que nenhuma ocorrência de `else` seja introduzida na solução.
+- **Teste Arquitetural Automatizado:** O arquivo `ObjectCalisthenicsArchTests.cs` inspeciona todos os arquivos `.cs` da pasta `src/`, garantindo que nenhuma ocorrência da palavra-chave `else` exista no código.
 
 ### 2. Imutabilidade e Tipagem Forte com Records
-- Utilização de `readonly record struct` e `sealed record` para DTOs, requisições e eventos de movimentação (`Venda`, `MovimentacaoEstoque`, `CalculoMoraResultado`).
-- Prevenção contra mutações colaterais de estado e facilidade em cenários com concorrência.
+- Utilização de `readonly record struct` e `sealed record` para DTOs, requisições e eventos (`Venda`, `MovimentacaoEstoque`, `CalculoMoraResultado`).
+- Prevenção contra alterações indevidas de estado e código mais conciso.
 
-### 3. Encapsulamento & Tell, Don't Ask
-- A entidade de domínio `Produto` encapsula as operações `AdicionarSaldo` e `DeduzirSaldo`, impedindo que entidades externas manipulem diretamente o saldo e assegurando atomicidade.
+### 3. Encapsulamento de Regras
+- A entidade de domínio `Produto` encapsula os métodos `AdicionarSaldo` e `DeduzirSaldo`, garantindo que o saldo não possa ser alterado externamente de forma inconsistente.
 
 ---
 
@@ -62,17 +60,17 @@ Consolidação de vendas por vendedor e aplicação individual das alíquotas:
 ---
 
 ### 📦 Módulo 2: Estoque — Motor de Movimentação de Mercadorias
-Motor transacional com carga inicial de 5 SKUs (Caneta Azul, Caderno Universitário, Borracha Branca, Lápis Preto HB e Marcador de Texto Amarelo).
-- Geração obrigatória de identificador único **GUID/UUID** para cada movimentação.
+Motor transacional com carga inicial dos 5 produtos informados no enunciado (Caneta Azul, Caderno Universitário, Borracha Branca, Lápis Preto HB e Marcador de Texto Amarelo).
+- Geração de identificador único **GUID** para cada movimentação realizada.
 - Registro completo: Tipo (`Entrada` / `Saída`), motivo/descrição e quantidade movimentada.
-- **Validação atômica de saldo negativo:** Lança `SaldoInsuficienteException` ao tentar retirar quantidade superior ao saldo, mantendo o inventário íntegro.
-- Retorno do saldo atualizado pós-operação e histórico auditável.
+- **Validação de saldo negativo:** Lança `SaldoInsuficienteException` ao tentar retirar quantidade superior ao saldo, mantendo o inventário íntegro.
+- Retorno do saldo atualizado pós-operação e histórico de movimentações.
 
 ---
 
 ### 💰 Módulo 3: Financeiro — Cálculo de Mora e Multa
-Motor de liquidação financeira com base em data de vencimento e valor do título:
-- **Multa diária:** 2,5% ao dia corrido de atraso relativo à data de referência.
+Cálculo de juros por atraso a partir de um valor e data de vencimento:
+- **Multa diária:** 2,5% ao dia corrido de atraso em relação à data de referência.
 - **Títulos em dia ou com vencimento futuro:** Não sofrem nenhum acréscimo (0 dias de atraso, R$ 0,00 de multa).
 - Fórmula: $\text{Multa} = \text{Valor Original} \times (\text{Dias de Atraso} \times 0,025)$.
 
@@ -82,30 +80,28 @@ Motor de liquidação financeira com base em data de vencimento e valor do títu
 
 ```text
 desafio_target/
-├── TargetSistemas.sln
+├── TargetSistemas.sln                     # Arquivo de solução
 ├── src/
-│   ├── TargetSistemas.Domain/             # Regras de negócio, Entidades, Enums, Records e Exceções
+│   ├── TargetSistemas.Domain/             # Entidades, Enums, Records e Exceções
 │   │   ├── Comercial/
 │   │   ├── Estoque/
 │   │   └── Financeiro/
-│   ├── TargetSistemas.Application/        # Serviços aplicacionais, DTOs, Interfaces e Repositório
+│   ├── TargetSistemas.Application/        # Serviços, DTOs, Interfaces e Repositório
 │   │   ├── Comercial/
 │   │   ├── Estoque/
 │   │   └── Financeiro/
-│   └── TargetSistemas.ConsoleApp/         # Executável CLI demonstrando os 3 módulos formatados
+│   └── TargetSistemas.ConsoleApp/         # Aplicação console demonstrando os 3 módulos
 ├── tests/
-│   └── TargetSistemas.UnitTests/          # 35 Testes xUnit (Comercial, Estoque, Financeiro, Arquitetura)
+│   └── TargetSistemas.UnitTests/          # 35 Testes unitários com xUnit
 │       ├── Comercial/
 │       ├── Estoque/
 │       ├── Financeiro/
 │       └── Architecture/
-├── frontend/                              # Aplicação Web ERP pronta para deploy estático
-│   ├── index.html                         # Interface SPA com Tailwind CSS
-│   ├── app.js                             # Motores de cálculo e gerenciamento de estado
-│   └── styles.css                         # Estilização corporativa e efeitos visuais
-├── .github/workflows/ci-pages.yml         # CI automatizado (build, xUnit e deploy no GitHub Pages)
-├── vercel.json                            # Roteamento automático para a Vercel
-├── index.html                             # Cópia raiz para preview direto local ou deploy imediato
+├── frontend/                              # Interface web para demonstração
+│   ├── index.html                         # Dashboard interativo com abas
+│   ├── app.js                             # Lógica em JavaScript
+│   └── styles.css                         # Estilos visuais
+├── index.html                             # Acesso rápido na raiz
 ├── app.js
 └── styles.css
 ```
@@ -115,18 +111,18 @@ desafio_target/
 ## 🚀 Como Executar o Backend em C# (.NET)
 
 ### Pré-requisitos:
-- .NET SDK 8.0 ou superior (testado e compilado em .NET 10.0).
+- .NET SDK instalado (.NET 8 ou superior).
 
 ### 1. Compilar a Solução:
 ```bash
 dotnet build
 ```
 
-### 2. Executar a Suíte de Testes (xUnit):
+### 2. Executar os Testes Unitários (xUnit):
 ```bash
 dotnet test
 ```
-> **Resultado:** 35 testes executados com êxito em ~100ms.
+> **Resultado:** 35 testes executados com 100% de aprovação.
 
 ### 3. Executar o Console Demonstrativo:
 ```bash
@@ -135,58 +131,19 @@ dotnet run --project src/TargetSistemas.ConsoleApp
 
 ---
 
-## 🌐 Como Executar e Publicar o Frontend
+## 🌐 Como Executar o Frontend (Demonstração Visual)
 
-O frontend foi desenvolvido de modo auto-suficiente: não requer que o backend esteja em execução para demonstração das regras de negócio.
+O frontend foi desenvolvido para funcionar diretamente no navegador, sem precisar compilar ou rodar nenhum servidor backend local.
 
-### Demonstração Local Imediata:
-Basta abrir o arquivo `index.html` (na raiz ou dentro da pasta `frontend/`) diretamente no navegador:
+Basta abrir o arquivo `index.html` (na raiz do projeto ou dentro da pasta `frontend/`) em qualquer navegador:
 ```bash
-# Exemplo no Linux
+# No Linux
 xdg-open index.html
 
-# Exemplo no macOS
+# No macOS
 open index.html
 
-# Exemplo no Windows
+# No Windows
 start index.html
 ```
-
----
-
-## ☁️ Guia de Publicação / Deploy Online
-
-### Opção 1: Vercel (Recomendada - Deploy em 1 minuto)
-1. Crie uma conta ou faça login em [vercel.com](https://vercel.com).
-2. Clique em **"Add New Project"** e conecte seu repositório do GitHub.
-3. Como o arquivo `vercel.json` e os arquivos de entrada já estão configurados, **nenhuma configuração adicional é necessária**.
-4. Clique em **"Deploy"**. A URL gerada estará pronta para o recrutador.
-
-*(Alternativa via Vercel CLI no terminal)*:
-```bash
-npm i -g vercel
-vercel
-```
-
----
-
-### Opção 2: GitHub Pages (Automatizado via GitHub Actions)
-O repositório já inclui o arquivo de workflow `.github/workflows/ci-pages.yml`. Para ativar:
-1. No seu repositório no GitHub, acesse **Settings** ➔ **Pages**.
-2. Em **Build and deployment** ➔ **Source**, selecione **GitHub Actions**.
-3. Faça um `git push` para a branch `main`. O GitHub rodará os testes xUnit e publicará a página automaticamente em:
-   `https://<seu-usuario>.github.io/<nome-do-repositorio>/`
-
----
-
-### Opção 3: Netlify (Deploy com Drag & Drop)
-1. Acesse [app.netlify.com/drop](https://app.netlify.com/drop).
-2. Arraste a pasta `frontend` para a janela do navegador.
-3. Em menos de 10 segundos o link público será disponibilizado.
-
----
-
-## 👨‍💻 Autor
-
-Solução desenvolvida por **Lucas**, Engenheiro de Software Sênior.
-Contato e referências disponíveis no perfil do GitHub.
+Ou simplesmente dar um duplo clique no arquivo `index.html` pelo gerenciador de arquivos.
