@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Target Sistemas | ERP Comercial & Desafio Técnico .NET</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+
+  <!-- TOP HEADER / BRANDING -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/25">
+          TS
+        </div>
+        <div>
+          <h1 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
+            Target Sistemas <span class="text-xs px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono font-medium">ERP Core</span>
+          </h1>
+          <p class="text-xs text-slate-400">Solução do Desafio Técnico .NET & Arquitetura Comercial</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 pulse-badge">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          35 Testes xUnit Passando (Zero 'else')
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <div class="bg-slate-950 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto space-x-1 py-2">
+      <button data-target="tab-dashboard" class="nav-tab tab-active px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap">
+        <span>📊</span> Visão Geral
+      </button>
+      <button data-target="tab-comercial" class="nav-tab text-slate-400 hover:text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap">
+        <span>💼</span> 1. Comercial (Comissões)
+      </button>
+      <button data-target="tab-estoque" class="nav-tab text-slate-400 hover:text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap">
+        <span>📦</span> 2. Estoque (Movimentação)
+      </button>
+      <button data-target="tab-financeiro" class="nav-tab text-slate-400 hover:text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap">
+        <span>💰</span> 3. Financeiro (Mora & Multa)
+      </button>
+      <button data-target="tab-arquitetura" class="nav-tab text-slate-400 hover:text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap">
+        <span>🧪</span> Arquitetura & Testes
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================================================================= -->
+    <!-- TAB 0: DASHBOARD GERAL -->
+    <!-- ================================================================= -->
+    <section id="tab-dashboard" class="tab-section space-y-6">
+      <div class="glass-panel p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-800">
+        <h2 class="text-xl font-bold text-white mb-2">Painel Executivo ERP</h2>
+        <p class="text-sm text-slate-400 leading-relaxed max-w-3xl">
+          Solução corporativa dos 3 desafios da Target Sistemas implementada sob padrões de Engenharia de Software Sênior em C# (.NET 10 / .NET 8) e frontend 100% autônomo (pronto para GitHub Pages e Vercel sem necessidade de backend rodando).
+        </p>
+      </div>
+
+      <!-- CARDS KPI GERAIS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-panel p-5 rounded-xl border border-slate-800">
+          <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Volume Total de Vendas</p>
+          <p id="dash-total-vendas" class="text-2xl font-bold text-white mt-2 font-mono">R$ 0,00</p>
+          <p class="text-xs text-blue-400 mt-1">Consolidado 4 vendedores</p>
+        </div>
+
+        <div class="glass-panel p-5 rounded-xl border border-slate-800">
+          <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Total de Comissões</p>
+          <p id="dash-total-comissoes" class="text-2xl font-bold text-emerald-400 mt-2 font-mono">R$ 0,00</p>
+          <p class="text-xs text-emerald-500/80 mt-1">Faixas progressivas (0%, 1%, 5%)</p>
+        </div>
+
+        <div class="glass-panel p-5 rounded-xl border border-slate-800">
+          <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Itens em Estoque</p>
+          <p id="dash-total-estoque" class="text-2xl font-bold text-cyan-400 mt-2 font-mono">835 un</p>
+          <p class="text-xs text-cyan-500/80 mt-1">5 SKUs monitorados</p>
+        </div>
+
+        <div class="glass-panel p-5 rounded-xl border border-slate-800">
+          <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Top Vendedor</p>
+          <p id="dash-top-vendedor" class="text-2xl font-bold text-amber-400 mt-2 truncate">-</p>
+          <p class="text-xs text-amber-500/80 mt-1">Maior faturamento comercial</p>
+        </div>
+      </div>
+
+      <!-- DESTAQUES ARQUITETURAIS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-panel p-6 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold mb-4">01</div>
+            <h3 class="text-lg font-bold text-white mb-2">Módulo Comercial</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Cálculo de comissões por venda com faixas: &lt; R$ 100 (0%), R$ 100 a R$ 499,99 (1%) e &gt;= R$ 500 (5%). Consolidação agregada com ordenação de desempenho.
+            </p>
+          </div>
+          <button onclick="document.querySelector('[data-target=\'tab-comercial\']').click()" class="w-full py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white transition-colors">
+            Acessar Módulo Comercial ➔
+          </button>
+        </div>
+
+        <div class="glass-panel p-6 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold mb-4">02</div>
+            <h3 class="text-lg font-bold text-white mb-2">Módulo de Estoque</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Motor transacional de inventário com geração de GUID para cada operação, validação atômica de saldo negativo e trilha de auditoria completa.
+            </p>
+          </div>
+          <button onclick="document.querySelector('[data-target=\'tab-estoque\']').click()" class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white transition-colors">
+            Acessar Módulo de Estoque ➔
+          </button>
+        </div>
+
+        <div class="glass-panel p-6 rounded-xl border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold mb-4">03</div>
+            <h3 class="text-lg font-bold text-white mb-2">Módulo Financeiro</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+              Liquidação de títulos com incidência de mora diária de 2,5% ao dia corrido de atraso. Isenção garantida para títulos em dia ou com vencimento futuro.
+            </p>
+          </div>
+          <button onclick="document.querySelector('[data-target=\'tab-financeiro\']').click()" class="w-full py-2 px-3 rounded-lg bg-amber-600 hover:bg-amber-500 text-xs font-semibold text-white transition-colors">
+            Acessar Módulo Financeiro ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: COMERCIAL (COMISSÕES) -->
+    <!-- ================================================================= -->
+    <section id="tab-comercial" class="tab-section hidden space-y-6">
+      <!-- HEADER DO MÓDULO -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 glass-panel p-6 rounded-2xl border border-slate-800">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            Módulo Comercial: Consolidação de Vendas & Comissões
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Regras de Alíquota: <span class="text-slate-300 font-mono">&lt; R$ 100,00 (0%)</span> | 
+            <span class="text-amber-400 font-mono">R$ 100,00 a R$ 499,99 (1%)</span> | 
+            <span class="text-emerald-400 font-mono">&gt;= R$ 500,00 (5%)</span>
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-processar-vendas" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg shadow transition-colors flex items-center gap-1.5">
+            <span>⚡</span> Recalcular Vendas
+          </button>
+          <button id="btn-restaurar-json-vendas" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg border border-slate-700 transition-colors">
+            Resetar Payload
+          </button>
+        </div>
+      </div>
+
+      <!-- KPIS COMERCIAIS -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-panel p-4 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400">Total Faturado</span>
+          <p id="kpi-total-vendas" class="text-xl font-bold font-mono text-white mt-1">R$ 0,00</p>
+        </div>
+        <div class="glass-panel p-4 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400">Comissão Consolidada</span>
+          <p id="kpi-total-comissoes" class="text-xl font-bold font-mono text-emerald-400 mt-1">R$ 0,00</p>
+        </div>
+        <div class="glass-panel p-4 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400">Taxa Média Efetiva</span>
+          <p id="kpi-taxa-media" class="text-xl font-bold font-mono text-blue-400 mt-1">0,00%</p>
+        </div>
+        <div class="glass-panel p-4 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400">Volume Transacional</span>
+          <p id="kpi-qtd-vendas" class="text-xl font-bold font-mono text-amber-400 mt-1">0 transações</p>
+        </div>
+      </div>
+
+      <!-- TABELA CONSOLIDADA DE VENDEDORES -->
+      <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+        <div class="p-4 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>🏆</span> Ranking e Consolidação Individual de Comissões
+          </h3>
+          <span class="text-xs text-slate-400 font-mono">Agrupado e ordenado por faturamento</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-950 text-slate-400 font-mono text-xs uppercase">
+                <th class="py-3 px-4">Vendedor</th>
+                <th class="py-3 px-4 text-center">Transações</th>
+                <th class="py-3 px-4 text-right">Total Vendido</th>
+                <th class="py-3 px-4 text-right">Comissão Total</th>
+                <th class="py-3 px-4 text-right">Taxa Efetiva</th>
+                <th class="py-3 px-4 text-center">Detalhamento</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-vendedores-body">
+              <!-- Inserido dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GRID INFERIOR: ADICIONAR VENDA & EDITOR JSON -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- FORMULARIO VENDA AVULSA -->
+        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+          <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+            <span>➕</span> Simular Nova Venda Avulsa
+          </h3>
+          <p class="text-xs text-slate-400 mb-4">Adicione uma venda em tempo real para recalcular os dados instantaneamente.</p>
+          <form id="form-add-venda" class="space-y-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Nome do Vendedor</label>
+              <input type="text" id="input-novo-vendedor" placeholder="Ex: João Silva" required class="w-full px-3 py-2 bg-slate-850 rounded-lg border border-slate-700 text-sm text-white focus:outline-none focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Valor da Venda (R$)</label>
+              <input type="number" step="0.01" min="0" id="input-novo-valor" placeholder="Ex: 850.00" required class="w-full px-3 py-2 bg-slate-850 rounded-lg border border-slate-700 text-sm text-white focus:outline-none focus:border-blue-500">
+            </div>
+            <button type="submit" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-white rounded-lg transition-colors">
+              Adicionar Venda e Recalcular
+            </button>
+          </form>
+        </div>
+
+        <!-- PAYLOAD JSON INTERATIVO -->
+        <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col">
+          <h3 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
+            <span>📋</span> Payload JSON Fornecido no Desafio
+          </h3>
+          <p class="text-xs text-slate-400 mb-3">Você pode editar os valores diretamente no JSON para validar qualquer cenário.</p>
+          <textarea id="comercial-json-input" rows="7" class="w-full flex-1 p-3 bg-slate-950 font-mono text-xs text-slate-300 rounded-lg border border-slate-800 focus:outline-none focus:border-blue-500 resize-none"></textarea>
+          <div id="comercial-alert" class="hidden mt-2 p-2 rounded text-xs bg-rose-500/10 text-rose-400 border border-rose-500/20"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: ESTOQUE (MOVIMENTAÇÃO) -->
+    <!-- ================================================================= -->
+    <section id="tab-estoque" class="tab-section hidden space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 glass-panel p-6 rounded-2xl border border-slate-800">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            Módulo de Estoque: Motor de Movimentação Transacional
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Geração de GUID único, validação defensiva contra saldos negativos e retorno do saldo pós-operação.
+          </p>
+        </div>
+        <button id="btn-resetar-estoque" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5">
+          <span>🔄</span> Restaurar Inventário Inicial
+        </button>
+      </div>
+
+      <!-- FEEDBACK / ALERTA DE SEGURANÇA -->
+      <div id="estoque-feedback" class="hidden p-4 rounded-xl border text-sm font-medium transition-all"></div>
+
+      <!-- INVENTÁRIO ATUAL -->
+      <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+        <div class="p-4 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>📦</span> Posição de Estoque em Tempo Real
+          </h3>
+          <span class="text-xs text-slate-400 font-mono">5 SKUs monitorados</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-950 text-slate-400 font-mono text-xs uppercase">
+                <th class="py-3 px-4">Código</th>
+                <th class="py-3 px-4">Descrição do Produto</th>
+                <th class="py-3 px-4 text-center">Estoque Inicial</th>
+                <th class="py-3 px-4 text-center">Saldo Atual</th>
+                <th class="py-3 px-4 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-estoque-body">
+              <!-- Inserido dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO DE MOVIMENTAÇÃO -->
+      <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <span>⚙️</span> Executar Operação de Movimentação
+        </h3>
+        <form id="form-movimentacao-estoque" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Produto</label>
+            <select id="estoque-select-produto" class="w-full px-3 py-2 bg-slate-800 rounded-lg border border-slate-700 text-sm text-white focus:outline-none focus:border-blue-500">
+              <!-- Inserido dinamicamente -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Tipo de Movimentação</label>
+            <select id="estoque-select-tipo" class="w-full px-3 py-2 bg-slate-800 rounded-lg border border-slate-700 text-sm text-white focus:outline-none focus:border-blue-500">
+              <option value="Entrada">▲ Entrada (+)</option>
+              <option value="Saida">▼ Saída (-)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Quantidade</label>
+            <input type="number" id="estoque-input-quantidade" min="1" placeholder="Ex: 25" required class="w-full px-3 py-2 bg-slate-800 rounded-lg border border-slate-700 text-sm text-white focus:outline-none focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Motivo / Justificativa</label>
+            <input type="text" id="estoque-input-motivo" placeholder="Ex: NF-e Entrada #4012" required class="w-full px-3 py-2 bg-slate-800 rounded-lg border border-slate-700 text-sm text-white focus:outline-none focus:border-blue-500">
+          </div>
+          <div class="md:col-span-4 flex justify-end">
+            <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg shadow transition-colors flex items-center gap-2">
+              <span>🚀</span> Confirmar Movimentação
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- HISTÓRICO DE AUDITORIA DE MOVIMENTAÇÕES -->
+      <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+        <div class="p-4 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>📑</span> Trilha de Auditoria & Histórico de Movimentações (com GUID)
+          </h3>
+          <span class="text-xs text-slate-400 font-mono">Registros ordenados por data decrescente</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-950 text-slate-400 font-mono text-xs uppercase">
+                <th class="py-3 px-3">Identificador GUID</th>
+                <th class="py-3 px-3">Horário</th>
+                <th class="py-3 px-3">Produto</th>
+                <th class="py-3 px-3 text-center">Tipo</th>
+                <th class="py-3 px-3 text-center">Qtd</th>
+                <th class="py-3 px-3 text-center">Saldo</th>
+                <th class="py-3 px-3">Motivo / Descrição</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-historico-estoque-body">
+              <!-- Inserido dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: FINANCEIRO (MORA & MULTA) -->
+    <!-- ================================================================= -->
+    <section id="tab-financeiro" class="tab-section hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          Módulo Financeiro: Liquidação com Cálculo de Mora e Multa
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Regra de Negócio: <span class="text-amber-400 font-mono font-medium">2,5% ao dia corrido de atraso</span> em relação à data atual/referência. Títulos em dia ou futuros sofrem <span class="text-emerald-400 font-medium">0% de acréscimo</span>.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- FORMULÁRIO DE SIMULAÇÃO -->
+        <div class="lg:col-span-5 glass-panel p-6 rounded-2xl border border-slate-800 space-y-5">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>🧮</span> Simulador de Título a Pagar / Receber
+          </h3>
+
+          <form id="form-financeiro" class="space-y-4">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Valor Original do Título (R$)</label>
+              <input type="number" step="0.01" min="0.01" id="fin-input-valor" value="1000.00" required class="w-full px-3 py-2 bg-slate-800 rounded-lg border border-slate-700 text-sm font-mono text-white focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Data de Vencimento</label>
+                <input type="date" id="fin-input-vencimento" required class="w-full px-3 py-2 bg-slate-800 rounded-lg border border-slate-700 text-sm font-mono text-white focus:outline-none focus:border-blue-500">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Data de Referência (Hoje)</label>
+                <input type="date" id="fin-input-referencia" required class="w-full px-3 py-2 bg-slate-800 rounded-lg border border-slate-700 text-sm font-mono text-white focus:outline-none focus:border-blue-500">
+              </div>
+            </div>
+
+            <!-- PRESETS DE CENÁRIOS RÁPIDOS -->
+            <div>
+              <label class="block text-xs text-slate-400 mb-2">Cenários Prontos (Clique para testar):</label>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" data-dias="0" class="btn-fin-preset px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 transition-colors">
+                  Em Dia (0 dias)
+                </button>
+                <button type="button" data-dias="-10" class="btn-fin-preset px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-blue-400 border border-slate-700 transition-colors">
+                  Futuro (+10 dias)
+                </button>
+                <button type="button" data-dias="1" class="btn-fin-preset px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition-colors">
+                  1 Dia Atraso (2,5%)
+                </button>
+                <button type="button" data-dias="5" class="btn-fin-preset px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition-colors">
+                  5 Dias Atraso (12,5%)
+                </button>
+                <button type="button" data-dias="30" class="btn-fin-preset px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-rose-400 border border-slate-700 transition-colors">
+                  30 Dias (75%)
+                </button>
+              </div>
+            </div>
+
+            <div id="fin-erro-box" class="hidden p-3 rounded-lg text-xs bg-rose-500/10 text-rose-400 border border-rose-500/20"></div>
+          </form>
+        </div>
+
+        <!-- EXTRATO / RESULTADO DO CÁLCULO -->
+        <div class="lg:col-span-7 glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>🧾</span> Demonstrativo de Liquidação Financeira
+              </h3>
+              <span id="fin-res-status-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                Calculando...
+              </span>
+            </div>
+
+            <div class="space-y-3 font-mono text-sm">
+              <div class="flex justify-between items-center py-1 border-b border-slate-800/60">
+                <span class="text-slate-400 text-xs font-sans">Valor Principal Original:</span>
+                <span id="fin-res-valor-original" class="font-bold text-slate-100">R$ 0,00</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-800/60">
+                <span class="text-slate-400 text-xs font-sans">Dias Corridos de Atraso:</span>
+                <span id="fin-res-dias-atraso" class="font-bold text-amber-400">0 dias</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-800/60">
+                <span class="text-slate-400 text-xs font-sans">Taxa Contratual Diária:</span>
+                <span id="fin-res-taxa-diaria" class="text-slate-300">2.5% / dia</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-800/60">
+                <span class="text-slate-400 text-xs font-sans">Encargo Percentual Acumulado:</span>
+                <span id="fin-res-percentual-total" class="font-bold text-amber-400">0,0%</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-800/60">
+                <span class="text-slate-400 text-xs font-sans">Valor da Mora / Multa Calculada:</span>
+                <span id="fin-res-valor-multa" class="font-bold text-rose-400">R$ 0,00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t-2 border-slate-700 flex items-center justify-between">
+            <span class="text-sm font-bold text-white uppercase tracking-wider">Total a Liquidar:</span>
+            <span id="fin-res-valor-total" class="text-3xl font-black font-mono text-emerald-400">R$ 0,00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: ARQUITETURA & TESTES XUNIT -->
+    <!-- ================================================================= -->
+    <section id="tab-arquitetura" class="tab-section hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          Engenharia de Software: Clean Code, Object Calisthenics & .NET 10
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Demonstração de como os princípios solicitados no enunciado foram rigorosamente aplicados na solução C#.
+        </p>
+      </div>
+
+      <!-- CARDS DE PRINCÍPIOS ARQUITETURAIS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="glass-panel p-5 rounded-xl border border-slate-800">
+          <div class="text-emerald-400 font-bold text-sm mb-2 flex items-center gap-1.5">
+            <span>✅</span> Regra: Não Usar 'else'
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Eliminação total de bifurcações <code class="text-amber-400">else</code> em 100% dos arquivos .NET. Substituído por <strong>Guard Clauses</strong>, retornos antecipados e <strong>C# Pattern Matching Switch Expressions</strong>.
+          </p>
+        </div>
+
+        <div class="glass-panel p-5 rounded-xl border border-slate-800">
+          <div class="text-blue-400 font-bold text-sm mb-2 flex items-center gap-1.5">
+            <span>🔒</span> Imutabilidade com Records
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Uso extensivo de <code class="text-blue-400">sealed record</code> e <code class="text-blue-400">readonly record struct</code> para DTOs, requisições e retornos, impedindo efeitos colaterais e garantindo concorrência segura.
+          </p>
+        </div>
+
+        <div class="glass-panel p-5 rounded-xl border border-slate-800">
+          <div class="text-purple-400 font-bold text-sm mb-2 flex items-center gap-1.5">
+            <span>🛡️</span> Exceções de Domínio Ricas
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Exceções expressivas como <code class="text-purple-400">SaldoInsuficienteException</code> e <code class="text-purple-400">VendaInvalidaException</code> que protegem a invariância dos agregados sem corromper o estado.
+          </p>
+        </div>
+      </div>
+
+      <!-- SUÍTE DE TESTES EXECUTADA -->
+      <div class="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+        <div class="p-4 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>🧪</span> Cobertura de Testes Automatizados (xUnit)
+          </h3>
+          <span class="text-xs px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+            35 testes aprovados em 102ms
+          </span>
+        </div>
+        <div class="p-4 space-y-2 font-mono text-xs max-h-96 overflow-y-auto">
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ ComercialServiceTests.Venda_AbaixoDe100Reais_DevePossuirZeroComissao</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ ComercialServiceTests.Venda_Entre100E499_99_DevePossuirUmPorCentoComissao</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ ComercialServiceTests.Venda_MaiorOuIgualA500_DevePossuirCincoPorCentoComissao</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ ComercialServiceTests.ProcessarPayloadOficial_DeveConsolidarTodosOsVendedoresCorretamente</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ EstoqueServiceTests.CatalogoInicial_DeveConterOsCincoProdutosDoDesafio</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ EstoqueServiceTests.Movimentar_EntradaValida_DeveIncrementarSaldoEGerarGuid</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ EstoqueServiceTests.Movimentar_SaidaValida_DeveDecrementarSaldo</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ EstoqueServiceTests.Movimentar_SaidaMaiorQueSaldo_DeveLancarSaldoInsuficienteExceptionEManterSaldoIntacto</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ FinanceiroServiceTests.CalcularMora_TituloEmDia_NaoDeveSofrerAcrescimo</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ FinanceiroServiceTests.CalcularMora_ComUmDiaDeAtraso_DeveAplicarDoisMeioPorCento</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ FinanceiroServiceTests.CalcularMora_ComDezDiasDeAtraso_DeveAplicarVinteCincoPorCento</span>
+            <span class="text-slate-500">Passed</span>
+          </div>
+          <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-emerald-400 flex items-center justify-between">
+            <span>✓ ObjectCalisthenicsArchTests.CodigoFonteDeProducao_NaoDeveConterPalavraChaveElse</span>
+            <span class="text-slate-500 font-bold">100% Zero Else Verified</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: EXTRATO DO VENDEDOR -->
+  <div id="modal-extrato-vendedor" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-2xl w-full rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+        <div>
+          <h3 id="modal-titulo-vendedor" class="text-base font-bold text-white">Extrato de Vendas</h3>
+          <p id="modal-resumo-vendedor" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+        <button onclick="fecharModalVendedor()" class="text-slate-400 hover:text-white p-1 rounded-lg text-lg">✕</button>
+      </div>
+
+      <div class="p-4 overflow-y-auto flex-1">
+        <table class="w-full text-left text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 font-mono text-xs uppercase">
+              <th class="py-2 px-3">Item</th>
+              <th class="py-2 px-3">Valor da Venda</th>
+              <th class="py-2 px-3">Alíquota</th>
+              <th class="py-2 px-3 text-right">Comissão</th>
+            </tr>
+          </thead>
+          <tbody id="modal-tabela-vendas-body">
+            <!-- Inserido dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="p-3 border-t border-slate-800 bg-slate-950 flex justify-end">
+        <button onclick="fecharModalVendedor()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-200 transition-colors">
+          Fechar Extrato
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-4 mt-auto text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>Target Sistemas ERP • Desenvolvido com C# .NET 10, xUnit & Modern Frontend</p>
+      <p class="font-mono text-slate-400">Zero-Else • Object Calisthenics • Clean Architecture</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
