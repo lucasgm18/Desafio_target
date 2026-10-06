@@ -8,7 +8,7 @@ Solução desenvolvida para o Desafio Técnico da **Target Sistemas**, contempla
 
 - **Backend:** C# (.NET 10 / .NET 8), organizado em camadas limpas (Domain, Application, ConsoleApp e UnitTests).
 - **Frontend:** Interface em HTML5, Tailwind CSS e JavaScript modular, **100% autônoma** (permite testar e simular as regras de negócio diretamente no navegador).
-- **Testes Automatizados:** 35 testes unitários e arquiteturais desenvolvidos com **xUnit**, cobrindo todas as regras de negócio e validando as restrições de código.
+- **Testes Automatizados:** 38 testes unitários e de borda desenvolvidos com **xUnit**, cobrindo todas as regras de negócio, validações de segurança e restrições de código.
 
 ---
 
@@ -29,13 +29,13 @@ Nenhuma estrutura condicional `else` foi utilizada no código de produção. As 
       _ => 0.05m
   };
   ```
-- **Teste Arquitetural Automatizado:** O arquivo `ObjectCalisthenicsArchTests.cs` inspeciona todos os arquivos `.cs` da pasta `src/`, garantindo que nenhuma ocorrência da palavra-chave `else` exista no código.
+- **Teste Arquitetural Automatizado:** O arquivo `ObjectCalisthenicsArchTests.cs` inspeciona todos os arquivos `.cs` da pasta `src/`, garantindo que nenhuma ocorrência da palavra-chave `else` exista no código de produção.
 
 ### 2. Imutabilidade e Tipagem Forte com Records
 - Utilização de `readonly record struct` e `sealed record` para DTOs, requisições e eventos (`Venda`, `MovimentacaoEstoque`, `CalculoMoraResultado`).
-- Prevenção contra alterações indevidas de estado e código mais conciso.
+- Prevenção contra alterações indevidas de estado e código mais conciso e expressivo.
 
-### 3. Encapsulamento de Regras
+### 3. Encapsulamento de Regras & Segurança
 - A entidade de domínio `Produto` encapsula os métodos `AdicionarSaldo` e `DeduzirSaldo`, garantindo que o saldo não possa ser alterado externamente de forma inconsistente.
 
 ---
@@ -61,10 +61,10 @@ Consolidação de vendas por vendedor e aplicação individual das alíquotas:
 
 ### 📦 Módulo 2: Estoque — Motor de Movimentação de Mercadorias
 Motor transacional com carga inicial dos 5 produtos informados no enunciado (Caneta Azul, Caderno Universitário, Borracha Branca, Lápis Preto HB e Marcador de Texto Amarelo).
-- Geração de identificador único **GUID** para cada movimentação realizada.
+- Geração de identificador único **GUID/UUID** para cada movimentação realizada.
 - Registro completo: Tipo (`Entrada` / `Saída`), motivo/descrição e quantidade movimentada.
-- **Validação de saldo negativo:** Lança `SaldoInsuficienteException` ao tentar retirar quantidade superior ao saldo, mantendo o inventário íntegro.
-- Retorno do saldo atualizado pós-operação e histórico de movimentações.
+- **Validação de saldo negativo:** Lança `SaldoInsuficienteException` ao tentar retirar quantidade superior ao saldo disponível, mantendo o inventário íntegro sem corromper o estado.
+- Retorno do saldo atualizado pós-operação e histórico auditável de movimentações.
 
 ---
 
@@ -73,6 +73,7 @@ Cálculo de juros por atraso a partir de um valor e data de vencimento:
 - **Multa diária:** 2,5% ao dia corrido de atraso em relação à data de referência.
 - **Títulos em dia ou com vencimento futuro:** Não sofrem nenhum acréscimo (0 dias de atraso, R$ 0,00 de multa).
 - Fórmula: $\text{Multa} = \text{Valor Original} \times (\text{Dias de Atraso} \times 0,025)$.
+- Exemplo: Título de R$ 1.000,00 com 4 dias de atraso resulta em R$ 100,00 de multa (10,0%) e total de R$ 1.100,00.
 
 ---
 
@@ -92,15 +93,15 @@ desafio_target/
 │   │   └── Financeiro/
 │   └── TargetSistemas.ConsoleApp/         # Aplicação console demonstrando os 3 módulos
 ├── tests/
-│   └── TargetSistemas.UnitTests/          # 35 Testes unitários com xUnit
+│   └── TargetSistemas.UnitTests/          # 38 Testes unitários com xUnit
 │       ├── Comercial/
 │       ├── Estoque/
 │       ├── Financeiro/
 │       └── Architecture/
-├── frontend/                              # Interface web para demonstração
-│   ├── index.html                         # Dashboard interativo com abas
-│   ├── app.js                             # Lógica em JavaScript
-│   └── styles.css                         # Estilos visuais
+├── frontend/                              # Interface web para demonstração interativa
+│   ├── index.html                         # Dashboard com sistema de abas
+│   ├── app.js                             # Lógica dos 3 motores em JavaScript
+│   └── styles.css                         # Estilos visuais e temas
 ├── index.html                             # Acesso rápido na raiz
 ├── app.js
 └── styles.css
@@ -122,7 +123,7 @@ dotnet build
 ```bash
 dotnet test
 ```
-> **Resultado:** 35 testes executados com 100% de aprovação.
+> **Resultado:** 38 testes executados com 100% de aprovação (cobrindo regras de negócio, testes de borda e restrição de zero-else).
 
 ### 3. Executar o Console Demonstrativo:
 ```bash
@@ -147,3 +148,8 @@ open index.html
 start index.html
 ```
 Ou simplesmente dar um duplo clique no arquivo `index.html` pelo gerenciador de arquivos.
+
+### Funcionalidades Disponíveis no Painel Web:
+- **Comercial:** Consulta dos totais faturados e comissões por vendedor, visualização de extrato individual clicando em "Ver Extrato", simulação de novas vendas em tempo real e edição direta do payload JSON.
+- **Estoque:** Tabela com os saldos atuais dos 5 produtos, formulário para lançar entradas e saídas com geração automática de UUID, bloqueio amigável contra saldo insuficiente e botão para restaurar o estoque inicial.
+- **Financeiro:** Simulador de títulos e notas fiscais com cálculo de multa diária (2,5%), atalhos para cenários rápidos (Em dia, +10 dias, 1 dia, 4 dias a 10% e 30 dias de atraso) e recálculo dinâmico ao digitar.
