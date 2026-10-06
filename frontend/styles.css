@@ -63,3 +63,20 @@ code, pre, .font-mono {
 .pulse-badge {
   animation: pulse-subtle 3s infinite ease-in-out;
 }
+
+/* Explicit form input styling for crisp contrast across all browsers */
+input, select, textarea {
+  background-color: #1e293b !important; /* slate-800 */
+  color: #f8fafc !important; /* slate-50 */
+  border-color: #334155 !important; /* slate-700 */
+}
+
+input:focus, select:focus, textarea:focus {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important; /* blue-500 */
+}
+
+input::placeholder, textarea::placeholder {
+  color: #94a3b8 !important; /* slate-400 */
+}
