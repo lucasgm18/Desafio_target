@@ -169,4 +169,37 @@ public class EstoqueServiceTests
         Assert.Contains(historico, h => h.Motivo == "Lote 1" && h.Tipo == TipoMovimentacao.Entrada);
         Assert.Contains(historico, h => h.Motivo == "Venda 1" && h.Tipo == TipoMovimentacao.Saida);
     }
+
+    [Fact]
+    public void Movimentar_SaidaDe200CadernosTendo75_DeveLancarSaldoInsuficienteExceptionSemAlterarEstoque()
+    {
+        var req = new RequisicaoMovimentacaoDto(
+            CodigoProduto: 102, // Caderno Universitário, saldo inicial é 75
+            Tipo: TipoMovimentacao.Saida,
+            Quantidade: 200,
+            Motivo: "Venda corporativa atacado"
+        );
+
+        var ex = Assert.Throws<SaldoInsuficienteException>(() => _service.Movimentar(req));
+        Assert.Equal(102, ex.CodigoProduto);
+        Assert.Equal(75, ex.SaldoAtual);
+        Assert.Equal(200, ex.QuantidadeSolicitada);
+
+        var produto = _service.ObterProduto(102);
+        Assert.Equal(75, produto.Saldo);
+    }
+
+    [Fact]
+    public void Movimentar_MultiplasOperacoes_DevemGerarGuidsDistintos()
+    {
+        var req1 = new RequisicaoMovimentacaoDto(101, TipoMovimentacao.Entrada, 10, "Lote 1");
+        var req2 = new RequisicaoMovimentacaoDto(101, TipoMovimentacao.Entrada, 10, "Lote 2");
+
+        var res1 = _service.Movimentar(req1);
+        var res2 = _service.Movimentar(req2);
+
+        Assert.NotEqual(Guid.Empty, res1.MovimentacaoId);
+        Assert.NotEqual(Guid.Empty, res2.MovimentacaoId);
+        Assert.NotEqual(res1.MovimentacaoId, res2.MovimentacaoId);
+    }
 }

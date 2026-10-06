@@ -56,6 +56,21 @@ public class FinanceiroServiceTests
     }
 
     [Fact]
+    public void CalcularMora_ComQuatroDiasDeAtrasoParaMilReais_DeveAplicarCemReaisDeMulta()
+    {
+        var referencia = new DateOnly(2026, 10, 5);
+        var vencimento = referencia.AddDays(-4); // 4 dias de atraso
+
+        var resultado = _service.CalcularMora(1000.00m, vencimento, referencia);
+
+        Assert.Equal(4, resultado.DiasAtraso);
+        Assert.Equal(10.0m, resultado.PercentualTotalMora); // 4 * 2.5% = 10%
+        Assert.Equal(100.00m, resultado.ValorMulta); // 1.000 * 10% = 100.00
+        Assert.Equal(1100.00m, resultado.ValorTotal);
+        Assert.True(resultado.PossuiAtraso);
+    }
+
+    [Fact]
     public void CalcularMora_ComDezDiasDeAtraso_DeveAplicarVinteCincoPorCento()
     {
         var vencimento = new DateOnly(2026, 9, 25);

@@ -449,8 +449,20 @@ window.abrirModalVendedor = function(nomeVendedor) {
 };
 
 window.fecharModalVendedor = function() {
-  document.getElementById('modal-extrato-vendedor').classList.add('hidden');
+  document.getElementById('modal-extrato-vendedor')?.classList.add('hidden');
 };
+
+document.getElementById('modal-extrato-vendedor')?.addEventListener('click', (e) => {
+  if (e.target.id === 'modal-extrato-vendedor') {
+    fecharModalVendedor();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    fecharModalVendedor();
+  }
+});
 
 // ============================================================================
 // RENDERIZAÇÃO: MÓDULO DE ESTOQUE
@@ -585,6 +597,8 @@ function mostrarFeedbackEstoque(mensagem, tipo) {
 
   box.classList.remove('hidden', 'bg-emerald-950/60', 'border-emerald-600', 'text-emerald-300', 'bg-rose-950/60', 'border-rose-600', 'text-rose-300', 'bg-blue-950/60', 'border-blue-600', 'text-blue-300');
 
+  const icone = tipo === 'success' ? '✅' : tipo === 'error' ? '🛡️' : 'ℹ️';
+
   if (tipo === 'success') {
     box.classList.add('bg-emerald-950/60', 'border-emerald-600', 'text-emerald-300');
   } else if (tipo === 'error') {
@@ -593,7 +607,11 @@ function mostrarFeedbackEstoque(mensagem, tipo) {
     box.classList.add('bg-blue-950/60', 'border-blue-600', 'text-blue-300');
   }
 
-  box.textContent = mensagem;
+  box.innerHTML = `<div class="flex items-start gap-2.5">
+    <span class="text-base">${icone}</span>
+    <span class="leading-relaxed font-semibold">${mensagem}</span>
+  </div>`;
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // ============================================================================
